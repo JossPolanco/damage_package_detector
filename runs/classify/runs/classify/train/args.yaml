@@ -1,7 +1,7 @@
 task: classify
 mode: train
 model: yolov8n-cls.pt
-data: C:\Users\Josue\Desktop\dtaa\dataset
+data: C:\Users\furch\OneDrive\Documentos\damage_package_detector\dataset
 epochs: 10
 time: null
 patience: 100
@@ -10,7 +10,7 @@ imgsz: 224
 save: true
 save_period: -1
 cache: false
-device: cpu
+device: '0'
 workers: 2
 project: runs/classify
 name: train
@@ -111,4 +111,4 @@ auto_augment: randaugment
 erasing: 0.4
 cfg: null
 tracker: tracktrack.yaml
-save_dir: C:\Users\Josue\Desktop\dtaa\runs\classify\runs\classify\train
+save_dir: C:\Users\furch\OneDrive\Documentos\damage_package_detector\runs\classify\runs\classify\train
