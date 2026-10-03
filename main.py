@@ -32,26 +32,27 @@ async def inspect_package(file: UploadFile = File(...)):
     try:
         image_bytes = await file.read()
         
-        # 1. Detect damage using Roboflow
+        # 1. Detect damage using Roboflow/YOLO
         damage_result = detect_damage(image_bytes)
         is_damaged = damage_result.get("is_damaged", False)
         detected_defects = damage_result.get("defects", [])
         
-        package_status = "OK"
-        logistics_action = "PROCEED_TO_ROUTE"
-        label_extracted_data = {}
-        
-        # 2. If damaged, call OCR to read the label
         if is_damaged:
             package_status = "DAMAGED"
             logistics_action = "BLOCK_DELIVERY"
+        else:
+            package_status = "OK"
+            logistics_action = "PROCEED_TO_ROUTE"
             
-            ocr_result = extract_shipping_label(image_bytes)
-            if ocr_result.get("success"):
-                label_extracted_data = ocr_result.get("parsed_data", {})
-                label_extracted_data["raw_text"] = ocr_result.get("text", "")
-            else:
-                label_extracted_data = {"error": "OCR failed or unavailable"}
+        label_extracted_data = {}
+        
+        # 2. Call OCR to read the label regardless of package status
+        ocr_result = extract_shipping_label(image_bytes)
+        if ocr_result.get("success"):
+            label_extracted_data = ocr_result.get("parsed_data", {})
+            label_extracted_data["raw_text"] = ocr_result.get("text", "")
+        else:
+            label_extracted_data = {"error": "OCR failed or unavailable"}
         
         # 3. Construct and return response
         response_data = {

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inspector de Paquetes</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <div class="background-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+    </div>
+
+    <div class="container glass-panel">
+        <header>
+            <h1>📦 Inspector Logístico IA</h1>
+            <p>Detección de Daños y Extracción de Etiquetas en Tiempo Real</p>
+        </header>
+
+        <main>
+            <div class="upload-section" id="drop-zone">
+                <input type="file" id="file-input" accept="image/*" hidden>
+                <div class="upload-content">
+                    <span class="icon">📸</span>
+                    <p>Arrastra tu imagen aquí o haz clic para subir</p>
+                </div>
+            </div>
+
+            <div id="loader" class="hidden">
+                <div class="spinner"></div>
+                <p>Analizando paquete...</p>
+            </div>
+
+            <div id="results" class="hidden result-panel">
+                <div class="image-preview">
+                    <img id="preview-img" src="" alt="Preview">
+                </div>
+                
+                <div class="data-preview">
+                    <div class="status-badge" id="status-badge"></div>
+                    
+                    <div class="data-group">
+                        <h3>Acción Logística</h3>
+                        <p id="action-text" class="highlight-text"></p>
+                    </div>
+
+                    <div class="data-group">
+                        <h3>Defectos Detectados</h3>
+                        <p id="defects-text"></p>
+                    </div>
+
+                    <div class="data-group" id="tracking-group">
+                        <h3>Número de Guía (Tracking)</h3>
+                        <p id="tracking-text" class="highlight-code"></p>
+                    </div>
+
+                    <div class="btn-group">
+                        <button id="download-pdf" class="btn primary-btn">📄 Descargar Reporte PDF</button>
+                        <button id="reset-btn" class="btn secondary-btn">🔄 Analizar Otro Paquete</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
