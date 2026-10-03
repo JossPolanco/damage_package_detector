@@ -4,7 +4,7 @@ from datetime import datetime
 import traceback
 
 from services.roboflow_service import detect_damage
-from services.ocr_service import extract_text_from_label
+from services.ocr_service import extract_shipping_label
 
 app = FastAPI(title="Logistics Package Inspection API")
 
@@ -46,7 +46,7 @@ async def inspect_package(file: UploadFile = File(...)):
             package_status = "DAMAGED"
             logistics_action = "BLOCK_DELIVERY"
             
-            ocr_result = extract_text_from_label(image_bytes)
+            ocr_result = extract_shipping_label(image_bytes)
             if ocr_result.get("success"):
                 label_extracted_data = ocr_result.get("parsed_data", {})
                 label_extracted_data["raw_text"] = ocr_result.get("text", "")
