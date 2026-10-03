@@ -6,13 +6,13 @@ load_dotenv()
 
 RAPIDAPI_KEY = os.getenv("RAPIDAPI_KEY")
 
-def extract_text_from_label(image_bytes: bytes) -> dict:
+def extract_shipping_label(image_bytes: bytes) -> dict:
     """
     Extracts text from package label using a RapidAPI OCR service.
     Uses a mock response if API key is not configured or in case of error.
     """
     if not RAPIDAPI_KEY or RAPIDAPI_KEY == "your_rapidapi_key_here":
-        # Mock Response
+        print("WARN: Usando mock para OCR. Configura RAPIDAPI_KEY en .env")
         return {
             "success": True,
             "text": "TRACKING NO: 1Z9999999999999999\nDELIVER TO: 123 MAIN ST, CITY, ST 12345",
@@ -23,32 +23,39 @@ def extract_text_from_label(image_bytes: bytes) -> dict:
         }
 
     try:
-        # Example API Call structure for a generic RapidAPI OCR
-        # You will need to replace the URL and Host with your specific chosen API
+        # Endpoint de ejemplo de RapidAPI (OCR Extract Text)
+        # Nota: Ajusta la URL y el Host si eliges una API de OCR diferente en RapidAPI.
         url = "https://ocr-extract-text.p.rapidapi.com/ocr"
         
         headers = {
-            "X-RapidAPI-Key": RAPIDAPI_KEY,
-            "X-RapidAPI-Host": "ocr-extract-text.p.rapidapi.com"
-            # Content-Type might vary depending on API
+            "x-rapidapi-key": RAPIDAPI_KEY,
+            "x-rapidapi-host": "ocr-extract-text.p.rapidapi.com"
         }
         
-        # files = {"image": ("image.jpg", image_bytes, "image/jpeg")}
-        # response = requests.post(url, files=files, headers=headers)
-        # response.raise_for_status()
-        # data = response.json()
+        files = {
+            "image": ("image.jpg", image_bytes, "image/jpeg")
+        }
         
-        # Return parsed data based on specific API response
-        # return {
-        #     "success": True,
-        #     "text": data.get("text", ""),
-        # }
+        response = requests.post(url, files=files, headers=headers)
         
-        # Fallback to mock for now since it's a stub
+        # Manejo de error si la respuesta no es 200 OK
+        if response.status_code != 200:
+            return {
+                "success": False,
+                "text": "",
+                "error": f"API Error {response.status_code}: {response.text}"
+            }
+            
+        data = response.json()
+        
+        # Dependiendo del API específica de RapidAPI, la estructura de 'data' cambia.
+        # Generalmente traen la llave 'text' o algo similar.
+        extracted_text = data.get("text", "")
+        
         return {
             "success": True,
-            "text": "MOCK TEXT FROM API CALL",
-            "parsed_data": {}
+            "text": extracted_text,
+            "parsed_data": {} # Aquí podrías agregar Expresiones Regulares para extraer datos
         }
 
     except Exception as e:
