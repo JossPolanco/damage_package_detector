@@ -4,3 +4,5 @@ python-multipart
 requests
 pillow
 python-dotenv
+inference-sdk
+ultralytics
